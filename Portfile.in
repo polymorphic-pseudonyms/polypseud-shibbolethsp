@@ -1,0 +1,27 @@
+PortSystem 1.0
+
+name                @PACKAGE@
+version             @PACKAGE_VERSION@
+categories          security shibboleth
+maintainers         you
+description         @PACKAGE@ extension for Shibboleth SP
+long_description    @PACKAGE@ extension for Shibboleth SP
+homepage            http://@PACKAGE@.example.org/
+
+platforms           darwin
+depends_lib         port:shibboleth
+
+master_sites        http://@PACKAGE@.example.org/downloads/${version}/
+checksums           sha1 @CHECKSUM@
+
+configure.args      --disable-static \
+                    --with-xerces=${prefix} \
+                    --with-xmlsec=${prefix} \
+                    --with-xmltooling=${prefix} \
+                    --with-saml=${prefix} \
+                    --with-shibsp=${prefix}
+
+
+livecheck.check     regex
+livecheck.url       http://@PACKAGE@.example.org/downloads/latest/mac/ports/shibboleth/@PACKAGE@/Portfile
+livecheck.regex     "version *(\\d+\\.\\d+(\\.\\d+)?)"
