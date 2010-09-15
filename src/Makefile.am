@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = foreign
 
 plugindir = $(libdir)/shibboleth
-plugin_LTLIBRARIES = @PACKAGE_NAME@.la @PACKAGE_NAME@-lite.la
+plugin_LTLIBRARIES = myextension.la myextension-lite.la
 
 myextension_la_SOURCES = \
 	@PACKAGE_NAME@.cpp
