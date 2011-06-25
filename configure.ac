@@ -21,7 +21,7 @@ else
 fi
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([myextension.spec Portfile])
+AC_CONFIG_FILES([myextension.spec])
 AC_CONFIG_FILES([Makefile doc/Makefile src/Makefile])
 
 AC_PROG_CC([gcc gcc3 cc])

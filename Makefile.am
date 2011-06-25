@@ -6,7 +6,7 @@ SUBDIRS = doc src
 
 DIST_SUBDIRS = doc src
 
-GENFILES = @PACKAGE_NAME@.spec Portfile
+GENFILES = @PACKAGE_NAME@.spec
 
 EXTRA_DIST = \
     @PACKAGE_NAME@.sln \
