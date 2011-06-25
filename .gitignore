@@ -18,3 +18,7 @@
 # The contents of the svn:ignore property on the branch root.
 /*.sdf
 /*.suo
+/.settings
+/.autotools
+/.project
+/.cproject
