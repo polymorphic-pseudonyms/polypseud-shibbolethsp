@@ -1,6 +1,6 @@
 # Process this file with autoreconf
 AC_PREREQ([2.50])
-AC_INIT([myextension],[1.0],[myextension@example.org],[myextension])
+AC_INIT([polypseud],[1.0],[polypseud@example.org],[polypseud])
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(m4)
@@ -21,7 +21,7 @@ else
 fi
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([myextension.spec])
+AC_CONFIG_FILES([polypseud.spec])
 AC_CONFIG_FILES([Makefile doc/Makefile src/Makefile])
 
 AC_PROG_CC([gcc gcc3 cc])
