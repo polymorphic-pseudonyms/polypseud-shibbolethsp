@@ -260,6 +260,55 @@ AC_LINK_IFELSE(
 # restore master libs
 LIBS="$save_LIBS"
 
+# OpenSSL settings
+AC_ARG_WITH(openssl,
+    AS_HELP_STRING([--with-openssl=PATH],[where OpenSSL is installed]),
+    [if test x_$with_openssl != x_/usr; then
+        LDFLAGS="-L${with_openssl}/lib $LDFLAGS"
+        CPPFLAGS="-I${with_openssl}/include $CPPFLAGS"
+    fi])
+LITE_LIBS="-lcrypto $LITE_LIBS"
+XMLSEC_LIBS="-lcrypto $XMLSEC_LIBS"
+
+# save and append master libs
+save_LIBS="$LIBS"
+LIBS="$XMLSEC_LIBS $LIBS"
+
+AC_CHECK_HEADER([openssl/bn.h],,AC_MSG_ERROR([unable to find OpenSSL header files]))
+AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM([[#include <openssl/bn.h>]],
+    [[BN_new()]])],
+    ,[AC_MSG_ERROR([unable to link with OpenSSL libcrypto])])
+
+# restore master libs
+LIBS="$save_LIBS"
+
+# polypseud settings
+AC_ARG_WITH(polypseud,
+    AS_HELP_STRING([--with-polypseud=PATH],[where libpolypseud is installed]),
+    [if test x_$with_polypseud != x_/usr; then
+        LDFLAGS="-L${with_polypseud}/lib $LDFLAGS"
+        CPPFLAGS="-I${with_polypseud}/include $CPPFLAGS"
+    fi])
+LITE_LIBS="-lpolypseud $LITE_LIBS"
+XMLSEC_LIBS="-lpolypseud $XMLSEC_LIBS"
+
+# save and append master libs
+save_LIBS="$LIBS"
+LIBS="$XMLSEC_LIBS $LIBS"
+
+AC_CHECK_HEADER([polypseud.h],,AC_MSG_ERROR([unable to find polypseud header file]))
+dnl AC_LINK_IFELSE(
+dnl    [AC_LANG_PROGRAM([[#include <polypseud.h>]],
+dnl    [[decrypt_ep(
+dnl        "Ama2GQ6MPNx1Zw5PohRi0+Y/7I6KuM+DhgKcFUzxaPaTamnTqYjpP30=,AsrpLpp50tAltgN6ZSe56aYQyqjoiIqhOrT/5F+oJRzoy1Vf0ejlH28=,A4C/yLQrUrE0UQ5W2/8IH5P07kzLz9UW/58kGP+r2HO6Uoj8R7lSXH4=",
+dnl        "15A16B2445F6255B6BA5CF47A0DE7AED8BEA1453523D6A05E785024EC79EBCFE925410B9991166E5",
+dnl        "58F5B792106F4B1F944F2AA661765E9199D210DCB8F17AB638F316862BC517CC51AFB2B9C676CE09")]])],
+dnl    ,[AC_MSG_ERROR([unable to link with polypseud library])])
+
+# restore master libs
+LIBS="$save_LIBS"
+
 AC_SUBST(LITE_LIBS)
 AC_SUBST(XMLSEC_LIBS)
 

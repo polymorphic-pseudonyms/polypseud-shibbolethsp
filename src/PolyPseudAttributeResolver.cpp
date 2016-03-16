@@ -9,6 +9,10 @@
 #include <xmltooling/util/XMLHelper.h>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+//#include "PseudonymDecryptor.cpp"
+//#include "polypseud_lib.c"
+#include <polypseud.h>
+
 using namespace shibsp;
 using namespace xmltooling;
 using namespace xmltooling::logging;
@@ -99,10 +103,16 @@ namespace polypseud {
             Category& m_log;
             string m_source;
             string m_dest;
+            string m_privkey;
+            string m_closingkey;
+            int m_port;
     };
 
     static const XMLCh dest[] =             UNICODE_LITERAL_4(d,e,s,t);
     static const XMLCh source[] =           UNICODE_LITERAL_6(s,o,u,r,c,e);
+    static const XMLCh port[] =             UNICODE_LITERAL_4(p,o,r,t);
+    static const XMLCh privkey[] =          UNICODE_LITERAL_7(p,r,i,v,k,e,y);
+    static const XMLCh closingkey[] =       UNICODE_LITERAL_10(c,l,o,s,i,n,g,k,e,y);
 
     AttributeResolver* SHIBSP_DLLLOCAL PolyPseudAttributeResolverFactory(const DOMElement* const & e)
     {
@@ -116,14 +126,20 @@ vector<opensaml::Assertion*> polypseud::PolyPseudContext::m_assertions;
 polypseud::PolyPseudAttributeResolver::PolyPseudAttributeResolver(const DOMElement* e)
     : m_log(Category::getInstance(SHIBSP_LOGCAT ".AttributeResolver.PolyPseud")),
     m_source(XMLHelper::getAttrString(e, nullptr, source)),
-    m_dest(XMLHelper::getAttrString(e, nullptr, dest))
+    m_dest(XMLHelper::getAttrString(e, nullptr, dest)),
+    m_privkey(XMLHelper::getAttrString(e, nullptr, privkey)),
+    m_closingkey(XMLHelper::getAttrString(e, nullptr, closingkey)),
+    m_port(XMLHelper::getAttrInt(e, 4444, port))
 {
     if (m_source.empty())
         throw ConfigurationException("PolyPseud AttributeResolver requires source attribute.");
-
     if (m_dest.empty())
         throw ConfigurationException("PolyPseud AttributeResolver requires dest attribute.");
 
+    if (m_privkey.empty())
+        throw ConfigurationException("PolyPseud AttributeResolver requires privkey attribute.");
+    if (m_closingkey.empty())
+        throw ConfigurationException("PolyPseud AttributeResolver requires closingkey attribute.");
 }
 
 
@@ -143,7 +159,10 @@ void polypseud::PolyPseudAttributeResolver::resolveAttributes(ResolutionContext&
         destwrapper.reset(new SimpleAttribute(ids));
 
         for (size_t i = 0; i < (*a)->valueCount(); ++i) {
-            destwrapper->getValues().push_back("thisIsAPseudonym");
+            //char pseudonym[1024];
+            //decrypt((*a)->getSerializedValues()[i].c_str(), m_port, pseudonym);
+            char *pseudonym = polypseud_decrypt_ep((*a)->getSerializedValues()[i].c_str(), m_privkey.c_str(), m_closingkey.c_str());
+            destwrapper->getValues().push_back(pseudonym);
         }
 
         if (destwrapper.get()) {
